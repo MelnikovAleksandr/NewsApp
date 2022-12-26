@@ -4,5 +4,7 @@
     <string name="popular_news">Popular News</string>
     <string name="search">Search</string>
     <string name="search_query">Enter a search query</string>
+    <string name="description">Description</string>
+    <string name="visit_site">Visit site</string>
 
 </resources>

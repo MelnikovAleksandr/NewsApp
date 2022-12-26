@@ -22,7 +22,11 @@
         android:id="@+id/detailsFragment"
         android:name="ru.asmelnikov.android.newsapp.ui.details.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="article"
+            app:argType="ru.asmelnikov.android.newsapp.models.Article" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="ru.asmelnikov.android.newsapp.ui.favorite.FavoriteFragment"
