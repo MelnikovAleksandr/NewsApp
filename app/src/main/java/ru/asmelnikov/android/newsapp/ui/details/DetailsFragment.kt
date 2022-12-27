@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,16 +22,16 @@ import ru.asmelnikov.android.newsapp.databinding.FragmentDetailsBinding
 class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
-    private val nBinding get() = _binding
+    private val nBinding get() = _binding!!
     private val bundleArgs: DetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<DetailsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
-        return nBinding?.root
+        return nBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,13 +41,16 @@ class DetailsFragment : Fragment() {
         articleArg.let { article ->
             article.urlToImage?.let {
                 Glide.with(this).load(article.urlToImage).error(R.drawable.ic_image)
-                    .into(nBinding!!.headerImage)
+                    .into(nBinding.headerImage)
             }
-            nBinding?.headerImage?.clipToOutline = true
-            nBinding?.articleDetailsTitle?.text = article.title
-            nBinding?.articleText?.text = article.description
+            nBinding.headerImage.clipToOutline = true
+            nBinding.articleDetailsTitle.text = article.title
+            nBinding.articleText.text = article.description
+            nBinding.iconBack.setOnClickListener {
+                view.findNavController().navigate(R.id.action_detailsFragment_to_mainFragment)
+            }
 
-            nBinding?.articleDetailsButton?.setOnClickListener {
+            nBinding.articleDetailsButton.setOnClickListener {
                 try {
                     Intent()
                         .setAction(Intent.ACTION_VIEW)
@@ -63,7 +67,7 @@ class DetailsFragment : Fragment() {
                     Toast.makeText(context, "Don't have any browser", Toast.LENGTH_LONG).show()
                 }
             }
-            nBinding?.iconFavorite?.setOnClickListener {
+            nBinding.iconFavorite.setOnClickListener {
                 viewModel.saveFavoriteArticle(article)
             }
         }
