@@ -25,6 +25,7 @@ class DetailsFragment : Fragment() {
     private val nBinding get() = _binding!!
     private val bundleArgs: DetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<DetailsViewModel>()
+    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +69,15 @@ class DetailsFragment : Fragment() {
                 }
             }
             nBinding.iconFavorite.setOnClickListener {
-                viewModel.saveFavoriteArticle(article)
+               if (!isFavorite) {
+                   nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_add)
+                   viewModel.saveFavoriteArticle(article)
+                   isFavorite = true
+               } else {
+                   nBinding.iconFavorite.setImageResource(R.drawable.ic__favorite_2)
+                   viewModel.deleteFavoriteArticle(article)
+                   isFavorite = false
+               }
             }
         }
     }
