@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +13,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/header_card"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,8 +24,12 @@
 
             <ImageView
                 android:id="@+id/header_image"
+                android:layout_marginBottom="50dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="fitCenter"
                 tools:ignore="ContentDescription" />
 
             <ImageView
@@ -37,8 +45,8 @@
 
             <ImageView
                 android:id="@+id/icon_favorite"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="17dp"
                 android:layout_marginBottom="18dp"
                 android:src="@drawable/ic__favorite_2"
@@ -48,8 +56,8 @@
 
             <ImageView
                 android:id="@+id/icon_share"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="18dp"
                 android:src="@drawable/ic_share_2"
@@ -96,8 +104,8 @@
         android:layout_marginHorizontal="14dp"
         android:layout_marginTop="14dp"
         android:textColor="@color/main_text_color"
-        android:textStyle="italic"
         android:textSize="12sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/article_description"
@@ -114,3 +122,4 @@
         app:layout_constraintTop_toBottomOf="@+id/article_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
