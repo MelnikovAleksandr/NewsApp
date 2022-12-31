@@ -47,9 +47,6 @@ class DetailsFragment : Fragment() {
             nBinding.headerImage.clipToOutline = true
             nBinding.articleDetailsTitle.text = article.title
             nBinding.articleText.text = article.description
-            nBinding.iconBack.setOnClickListener {
-                view.findNavController().navigate(R.id.action_detailsFragment_to_mainFragment)
-            }
 
             nBinding.articleDetailsButton.setOnClickListener {
                 try {
