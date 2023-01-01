@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,9 +46,6 @@ class DetailsFragment : Fragment() {
             nBinding.headerImage.clipToOutline = true
             nBinding.articleDetailsTitle.text = article.title
             nBinding.articleText.text = article.description
-            nBinding.iconBack.setOnClickListener {
-                view.findNavController().navigate(R.id.action_detailsFragment_to_mainFragment)
-            }
 
             nBinding.articleDetailsButton.setOnClickListener {
                 try {
@@ -74,7 +70,7 @@ class DetailsFragment : Fragment() {
                    viewModel.saveFavoriteArticle(article)
                    isFavorite = true
                } else {
-                   nBinding.iconFavorite.setImageResource(R.drawable.ic__favorite_2)
+                   nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_2)
                    viewModel.deleteFavoriteArticle(article)
                    isFavorite = false
                }

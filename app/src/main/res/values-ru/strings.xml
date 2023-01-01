@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Новости</string>
+    <string name="my_news">Мои новости</string>
+    <string name="popular_news">Популярные новости</string>
+    <string name="search">Поиск</string>
+    <string name="search_query">Введите поисковый запрос</string>
+    <string name="description">Описание</string>
+    <string name="visit_site">Посетить сайт</string>
+    <string name="favorites_title">Избранное</string>
+    <string name="successfully_deleted">Успешное удаление!</string>
+    <string name="undo">Отмена</string>
+    <string name="region_popular_news">ru</string>
+
+</resources>
