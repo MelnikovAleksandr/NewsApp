@@ -7,5 +7,7 @@
     <string name="description">Description</string>
     <string name="visit_site">Visit site</string>
     <string name="favorites_title">Favourites</string>
-
+    <string name="successfully_deleted">Successfully deleted article</string>
+    <string name="undo">Undo</string>
+    <string name="region_popular_news">us</string>
 </resources>

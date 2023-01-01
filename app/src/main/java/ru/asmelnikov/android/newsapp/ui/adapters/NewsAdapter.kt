@@ -1,8 +1,10 @@
 package ru.asmelnikov.android.newsapp.ui.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +12,9 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_article.view.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.models.Article
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
@@ -33,13 +38,16 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.itemView.apply {
             Glide.with(this).load(article.urlToImage).error(R.drawable.ic_image).into(article_image)
             article_image.clipToOutline = true
             article_title.text = article.title
-            article_date.text = article.publishedAt
+            val parsedDate = LocalDateTime.parse(article.publishedAt, DateTimeFormatter.ISO_DATE_TIME)
+            val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+            article_date.text = formattedDate
 
             setOnClickListener {
                 onItemClickListener?.let { it(article) }
