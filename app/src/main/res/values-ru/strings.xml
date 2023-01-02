@@ -9,7 +9,9 @@
     <string name="visit_site">Посетить сайт</string>
     <string name="favorites_title">Избранное</string>
     <string name="successfully_deleted">Успешное удаление!</string>
+    <string name="successfully_add">Успешное добавление!</string>
     <string name="undo">Отмена</string>
     <string name="region_popular_news">ru</string>
+    <string name="send_article">Отправка новости</string>
 
 </resources>

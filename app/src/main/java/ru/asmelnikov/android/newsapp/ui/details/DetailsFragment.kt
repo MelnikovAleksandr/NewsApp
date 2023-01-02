@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentDetailsBinding
@@ -24,7 +25,6 @@ class DetailsFragment : Fragment() {
     private val nBinding get() = _binding!!
     private val bundleArgs: DetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<DetailsViewModel>()
-    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +46,7 @@ class DetailsFragment : Fragment() {
             nBinding.headerImage.clipToOutline = true
             nBinding.articleDetailsTitle.text = article.title
             nBinding.articleText.text = article.description
-
+            nBinding.iconFavorite.setImageResource(R.drawable.ic_add_to_favorites)
             nBinding.articleDetailsButton.setOnClickListener {
                 try {
                     Intent()
@@ -65,15 +65,23 @@ class DetailsFragment : Fragment() {
                 }
             }
             nBinding.iconFavorite.setOnClickListener {
-               if (!isFavorite) {
-                   nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_add)
-                   viewModel.saveFavoriteArticle(article)
-                   isFavorite = true
-               } else {
-                   nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_2)
-                   viewModel.deleteFavoriteArticle(article)
-                   isFavorite = false
-               }
+                viewModel.saveFavoriteArticle(article)
+                Snackbar.make(view, R.string.successfully_add, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+        nBinding.iconShare.setOnClickListener {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, articleArg.url)
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    articleArg.title
+                )
+            }.also { intent ->
+                val chooseIntent = Intent.createChooser(
+                    intent, getString(R.string.send_article)
+                )
+                startActivity(chooseIntent)
             }
         }
     }

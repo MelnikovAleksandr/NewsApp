@@ -1,10 +1,12 @@
 package ru.asmelnikov.android.newsapp.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,6 +40,22 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
 
+        newsAdapter.setOnItemClickListenerShared {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, it.url)
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    it.title
+                )
+            }.also { intent ->
+                val chooseIntent = Intent.createChooser(
+                    intent, getString(R.string.send_article)
+                )
+                startActivity(chooseIntent)
+            }
+        }
+
         newsAdapter.setOnItemClickListener {
             val bundle = bundleOf("article" to it)
             view.findNavController().navigate(
@@ -57,7 +75,10 @@ class MainFragment : Fragment() {
                 is Resource.Error -> {
                     progress_bar.visibility = View.INVISIBLE
                     response.data.let {
-                        Log.e("CheckData", "MainFragment: error $it")
+                        Toast.makeText(
+                            activity, "No Internet, check connection.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
                 is Resource.Loading -> {

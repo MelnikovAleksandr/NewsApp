@@ -1,6 +1,5 @@
 package ru.asmelnikov.android.newsapp.ui.favorite
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,6 @@ import kotlinx.coroutines.launch
 import ru.asmelnikov.android.newsapp.data.api.NewsRepository
 import ru.asmelnikov.android.newsapp.models.Article
 import javax.inject.Inject
-
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(private val repository: NewsRepository) : ViewModel() {

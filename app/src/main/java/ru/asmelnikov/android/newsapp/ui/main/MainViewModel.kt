@@ -1,23 +1,27 @@
 package ru.asmelnikov.android.newsapp.ui.main
 
+import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities.*
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.data.api.NewsRepository
+import ru.asmelnikov.android.newsapp.di.NewsApp
 import ru.asmelnikov.android.newsapp.models.NewsReppons
 import ru.asmelnikov.android.newsapp.utils.Resource
+import java.io.IOException
 import javax.inject.Inject
-
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: NewsRepository,
-    @ApplicationContext private val context: Context
-) : ViewModel() {
+    app: Application,
+    private val repository: NewsRepository
+) : AndroidViewModel(app) {
 
     val newsLiveData: MutableLiveData<Resource<NewsReppons>> =
         MutableLiveData()
@@ -25,7 +29,7 @@ class MainViewModel @Inject constructor(
     private var newsPage = 1
 
     private var regionOfPopularNews: String =
-        context.resources.getString(ru.asmelnikov.android.newsapp.R.string.region_popular_news)
+        app.resources.getString(R.string.region_popular_news)
 
     init {
         getNews(regionOfPopularNews)
@@ -33,18 +37,45 @@ class MainViewModel @Inject constructor(
 
     private fun getNews(countryCode: String) =
         viewModelScope.launch {
-            newsLiveData.postValue(Resource.Loading())
-            val response = repository.getNews(
-                countryCode = countryCode,
-                pageNumber = newsPage
-            )
-            if (response.isSuccessful) {
+            safeGetNewsCall(countryCode)
+        }
+
+    private suspend fun safeGetNewsCall(countryCode: String) {
+        newsLiveData.postValue(Resource.Loading())
+        try {
+            if (hasInternetConnection()) {
+                val response = repository.getNews(
+                    countryCode = countryCode,
+                    pageNumber = newsPage
+                )
                 response.body().let { res ->
                     newsLiveData.postValue(Resource.Success(res))
                 }
             } else {
-                newsLiveData.postValue(Resource.Error(message = response.message()))
+                newsLiveData.postValue(Resource.Error("No internet"))
+            }
+        } catch (t: Throwable) {
+            when (t) {
+                is IOException -> newsLiveData.postValue(Resource.Error("Network Failure"))
+                else -> newsLiveData.postValue(Resource.Error("Conversion Error"))
             }
         }
+    }
 
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = getApplication<NewsApp>()
+            .getSystemService(
+                Context.CONNECTIVITY_SERVICE
+            ) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(
+            activeNetwork
+        ) ?: return false
+        return when {
+            capabilities.hasTransport(TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    }
 }
