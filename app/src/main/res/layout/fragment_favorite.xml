@@ -21,8 +21,8 @@
 
     <TextView
         android:id="@+id/favorites_count"
-        android:layout_width="27dp"
-        android:layout_height="27dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:layout_marginStart="7dp"
         android:background="@drawable/shape_badge"
         android:gravity="center"
@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toTopOf="@+id/favorite_news_adapter"
         app:layout_constraintStart_toEndOf="@+id/favorite_news"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="21" />
+        tools:text="99+" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorite_news_adapter"

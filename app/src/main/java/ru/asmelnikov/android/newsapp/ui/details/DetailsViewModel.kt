@@ -1,6 +1,5 @@
 package ru.asmelnikov.android.newsapp.ui.details
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +18,5 @@ class DetailsViewModel @Inject constructor(
         Dispatchers.IO
     ) {
         repository.addToFavorite(article = article)
-    }
-
-    fun deleteFavoriteArticle(article: Article) = viewModelScope.launch(
-        Dispatchers.IO
-    ) {
-        repository.deleteFromFavorite(article = article)
-        Log.d("checkData", "Delete ${article.title}")
     }
 }

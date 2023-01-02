@@ -8,6 +8,9 @@
     <string name="visit_site">Visit site</string>
     <string name="favorites_title">Favourites</string>
     <string name="successfully_deleted">Successfully deleted article</string>
+    <string name="successfully_add">Successfully add article</string>
     <string name="undo">Undo</string>
     <string name="region_popular_news">us</string>
+    <string name="send_article">Send article</string>
+    <string name="over_99" translatable="false">99+</string>
 </resources>

@@ -1,5 +1,6 @@
 package ru.asmelnikov.android.newsapp.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -49,6 +50,20 @@ class SearchFragment : Fragment() {
                 R.id.action_searchFragment_to_detailsFragment,
                 bundle
             )
+        }
+        newsAdapter.setOnItemClickListenerShared {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, it.url)
+                putExtra(
+                    Intent.EXTRA_SUBJECT, it.title
+                )
+            }.also { intent ->
+                val chooseIntent = Intent.createChooser(
+                    intent, getString(R.string.send_article)
+                )
+                startActivity(chooseIntent)
+            }
         }
 
         var job: Job? = null

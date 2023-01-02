@@ -1,5 +1,6 @@
 package ru.asmelnikov.android.newsapp.ui.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,9 +41,34 @@ class FavoriteFragment : Fragment() {
 
         viewModel.getCount().observe(
             viewLifecycleOwner
-        ) { count -> favorites_count.text = count.toString() }
-        viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
-            newsAdapter.differ.submitList(articles.asReversed())
+        ) { count ->
+            if (count > 99) {
+                favorites_count.text = getString(R.string.over_99)
+                viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
+                    newsAdapter.differ.submitList(articles.asReversed())
+                }
+            } else {
+                favorites_count.text = count.toString()
+                viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
+                    newsAdapter.differ.submitList(articles.asReversed())
+                }
+            }
+        }
+
+        newsAdapter.setOnItemClickListenerShared {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, it.url)
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    it.title
+                )
+            }.also { intent ->
+                val chooseIntent = Intent.createChooser(
+                    intent, getString(R.string.send_article)
+                )
+                startActivity(chooseIntent)
+            }
         }
 
         newsAdapter.setOnItemClickListener {
@@ -69,7 +95,7 @@ class FavoriteFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val article = newsAdapter.differ.currentList[position]
                 viewModel.deleteFavoriteArticle(article)
-                Snackbar.make(view, R.string.successfully_deleted, Snackbar.LENGTH_LONG).apply {
+                Snackbar.make(view, R.string.successfully_deleted, Snackbar.LENGTH_SHORT).apply {
                     setAction(R.string.undo) {
                         viewModel.saveFavoriteArticle(article)
                     }
