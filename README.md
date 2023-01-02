@@ -22,3 +22,4 @@ NewsApp
 
 ✅ Glide
 
+✅ No Fragment Splash Screen 
