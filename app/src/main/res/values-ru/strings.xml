@@ -13,5 +13,8 @@
     <string name="undo">Отмена</string>
     <string name="region_popular_news">ru</string>
     <string name="send_article">Отправка новости</string>
+    <string name="no_internet">Нет Интернета, проверьте соединение.</string>
+    <string name="data_pattern">dd.MM.yyyy HH:mm</string>
+    <string name="no_browser">На устройстве нет браузеров</string>
 
 </resources>

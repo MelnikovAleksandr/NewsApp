@@ -2,7 +2,6 @@ package ru.asmelnikov.android.newsapp.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,7 +75,7 @@ class MainFragment : Fragment() {
                     progress_bar.visibility = View.INVISIBLE
                     response.data.let {
                         Toast.makeText(
-                            activity, "No Internet, check connection.",
+                            activity, R.string.no_internet,
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -89,7 +88,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter(requireContext())
         news_adapter.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

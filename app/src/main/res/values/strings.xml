@@ -12,5 +12,9 @@
     <string name="undo">Undo</string>
     <string name="region_popular_news">us</string>
     <string name="send_article">Send article</string>
+    <string name="no_internet">No Internet, check connection.</string>
     <string name="over_99" translatable="false">99+</string>
+    <string name="data_pattern">mm.dd.yyyy HH:mm</string>
+    <string name="no_browser">Don\'t have any browser</string>
+    <string name="empty_url" translatable="false">https://google.com</string>
 </resources>

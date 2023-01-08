@@ -1,5 +1,6 @@
 package ru.asmelnikov.android.newsapp.ui.adapters
 
+import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
+class NewsAdapter(private val context: Context) :
+    RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -45,9 +47,9 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
             Glide.with(this).load(article.urlToImage).error(R.drawable.ic_image).into(article_image)
             article_image.clipToOutline = true
             article_title.text = article.title
-            val parsedDate =
-                LocalDateTime.parse(article.publishedAt, DateTimeFormatter.ISO_DATE_TIME)
-            val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+            val formattedDate = LocalDateTime
+                .parse(article.publishedAt, DateTimeFormatter.ISO_DATE_TIME)
+                .format(DateTimeFormatter.ofPattern(context.getString(R.string.data_pattern)))
             article_date.text = formattedDate
 
             setOnClickListener {

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.data.api.NewsRepository
 import ru.asmelnikov.android.newsapp.di.NewsApp
 import ru.asmelnikov.android.newsapp.models.NewsReppons
@@ -23,7 +24,10 @@ class SearchViewModel @Inject constructor(
 ) : AndroidViewModel(app) {
 
     val searchNewsLiveData: MutableLiveData<Resource<NewsReppons>> = MutableLiveData()
-    private var searchNewsPage = 1
+    private val searchNewsPage = 1
+
+    private val errorMessage =
+        app.resources.getString(R.string.no_internet)
 
     init {
         getSearchNews(query = "")
@@ -45,12 +49,12 @@ class SearchViewModel @Inject constructor(
                     searchNewsLiveData.postValue(Resource.Success(res))
                 }
             } else {
-                searchNewsLiveData.postValue(Resource.Error("No internet"))
+                searchNewsLiveData.postValue(Resource.Error(errorMessage))
             }
         } catch (t: Throwable) {
             when (t) {
-                is IOException -> searchNewsLiveData.postValue(Resource.Error("Network Failure"))
-                else -> searchNewsLiveData.postValue(Resource.Error("Conversion Error"))
+                is IOException -> searchNewsLiveData.postValue(Resource.Error(errorMessage))
+                else -> searchNewsLiveData.postValue(Resource.Error(errorMessage))
             }
         }
     }

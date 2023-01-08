@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentDetailsBinding
@@ -54,21 +56,27 @@ class DetailsFragment : Fragment() {
                             URLUtil.isValidUrl(article.url)
                         }.let {
                             article.url
-                        } ?: "https://google.com"))
+                        } ?: getString(R.string.empty_url)))
                         .let {
                             ContextCompat.startActivity(requireContext(), it, null)
                         }
                 } catch (e: Exception) {
-                    Toast.makeText(context, "Don't have any browser", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.no_browser, Toast.LENGTH_LONG).show()
                 }
             }
             nBinding.iconFavorite.setOnClickListener {
-                viewModel.favoriteCheck(bundleArgs.article)
+                viewModel.favoriteAddAndCheck(bundleArgs.article)
+            }
+        }
+
+        viewModel.message.observe(viewLifecycleOwner) { it ->
+            it.getContentIfNotHandled()?.let {
+                Snackbar.make(view, it, Snackbar.LENGTH_SHORT).show()
             }
         }
 
         viewModel.isFavorite.observe(viewLifecycleOwner) {
-            viewModel.find(articleArg)
+            viewModel.favoritesCheck(articleArg)
             if (it == 0) {
                 nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_2)
             } else {
@@ -90,6 +98,10 @@ class DetailsFragment : Fragment() {
                 )
                 startActivity(chooseIntent)
             }
+        }
+
+        nBinding.iconBack.setOnClickListener {
+            view.findNavController().popBackStack()
         }
     }
 }
