@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -89,7 +90,10 @@ class SearchFragment : Fragment() {
                 is Resource.Error -> {
                     search_progress_bar.visibility = View.INVISIBLE
                     response.data.let {
-                        Log.e("CheckData", "SearchFragment: error $it")
+                        Toast.makeText(
+                            activity, R.string.no_internet,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
                 is Resource.Loading -> {
@@ -100,7 +104,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter(requireContext())
         search_news_adapter.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

@@ -26,10 +26,13 @@ class MainViewModel @Inject constructor(
     val newsLiveData: MutableLiveData<Resource<NewsReppons>> =
         MutableLiveData()
 
-    private var newsPage = 1
+    private val newsPage = 1
 
-    private var regionOfPopularNews: String =
+    private val regionOfPopularNews =
         app.resources.getString(R.string.region_popular_news)
+    private val errorMessage =
+        app.resources.getString(R.string.no_internet)
+
 
     init {
         getNews(regionOfPopularNews)
@@ -52,12 +55,12 @@ class MainViewModel @Inject constructor(
                     newsLiveData.postValue(Resource.Success(res))
                 }
             } else {
-                newsLiveData.postValue(Resource.Error("No internet"))
+                newsLiveData.postValue(Resource.Error(errorMessage))
             }
         } catch (t: Throwable) {
             when (t) {
-                is IOException -> newsLiveData.postValue(Resource.Error("Network Failure"))
-                else -> newsLiveData.postValue(Resource.Error("Conversion Error"))
+                is IOException -> newsLiveData.postValue(Resource.Error(errorMessage))
+                else -> newsLiveData.postValue(Resource.Error(errorMessage))
             }
         }
     }

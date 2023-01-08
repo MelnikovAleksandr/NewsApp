@@ -111,7 +111,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter(requireContext())
         favorite_news_adapter.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
