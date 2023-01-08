@@ -24,4 +24,6 @@ class NewsRepository @Inject constructor(
     fun getCount(): LiveData<Int> {
         return articleDao.getCount()
     }
+
+    suspend fun find(article: Article) = articleDao.find(article.publishedAt)
 }

@@ -16,6 +16,9 @@ interface ArticleDao {
     @Delete
     suspend fun delete(article: Article)
 
-    @Query("SELECT COUNT(id) FROM article")
+    @Query("SELECT COUNT(publishedAt) FROM article")
     fun getCount(): LiveData<Int>
+
+    @Query("SELECT COUNT(*) FROM article WHERE publishedAt=:publish")
+    suspend fun find(publish: String): Int
 }

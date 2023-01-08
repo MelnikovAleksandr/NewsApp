@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentDetailsBinding
@@ -46,7 +45,6 @@ class DetailsFragment : Fragment() {
             nBinding.headerImage.clipToOutline = true
             nBinding.articleDetailsTitle.text = article.title
             nBinding.articleText.text = article.description
-            nBinding.iconFavorite.setImageResource(R.drawable.ic_add_to_favorites)
             nBinding.articleDetailsButton.setOnClickListener {
                 try {
                     Intent()
@@ -65,10 +63,19 @@ class DetailsFragment : Fragment() {
                 }
             }
             nBinding.iconFavorite.setOnClickListener {
-                viewModel.saveFavoriteArticle(article)
-                Snackbar.make(view, R.string.successfully_add, Snackbar.LENGTH_SHORT).show()
+                viewModel.favoriteCheck(bundleArgs.article)
             }
         }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) {
+            viewModel.find(articleArg)
+            if (it == 0) {
+                nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_2)
+            } else {
+                nBinding.iconFavorite.setImageResource(R.drawable.ic_favorite_add)
+            }
+        }
+
         nBinding.iconShare.setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
