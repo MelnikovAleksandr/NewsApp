@@ -6,13 +6,12 @@ import java.io.Serializable
 
 @Entity(tableName = "article")
 data class Article(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int? = 0,
     val author: String?,
     val content: String?,
     val description: String?,
-    val publishedAt: String?,
+    @PrimaryKey(autoGenerate = false)
+    val publishedAt: String,
     val title: String?,
     val url: String?,
-    val urlToImage: String?
+    val urlToImage: String?,
 ) : Serializable
