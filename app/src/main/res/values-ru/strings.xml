@@ -16,5 +16,7 @@
     <string name="no_internet">Нет Интернета, проверьте соединение.</string>
     <string name="data_pattern">dd.MM.yyyy HH:mm</string>
     <string name="no_browser">На устройстве нет браузеров</string>
-
+    <string name="no_favourites">Пока нет избранных записей</string>
+    <string name="no_favourites2">Убедитесь, что вы добавили \n записи в этот раздел</string>
+    <string name="add_favorites">Добавьте избранное</string>
 </resources>

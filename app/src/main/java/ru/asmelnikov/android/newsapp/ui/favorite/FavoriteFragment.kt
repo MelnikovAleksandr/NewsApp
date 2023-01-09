@@ -44,11 +44,16 @@ class FavoriteFragment : Fragment() {
         ) { count ->
             if (count > 99) {
                 favorites_count.text = getString(R.string.over_99)
+                nBinding?.invisibleLayout?.visibility = View.GONE
                 viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
                     newsAdapter.differ.submitList(articles.asReversed())
                 }
+            } else if (count == 0) {
+                favorites_count.text = count.toString()
+                nBinding?.invisibleLayout?.visibility = View.VISIBLE
             } else {
                 favorites_count.text = count.toString()
+                nBinding?.invisibleLayout?.visibility = View.GONE
                 viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
                     newsAdapter.differ.submitList(articles.asReversed())
                 }
@@ -106,6 +111,11 @@ class FavoriteFragment : Fragment() {
 
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(favorite_news_adapter)
+        }
+
+
+        nBinding?.invisibleButton?.setOnClickListener {
+            view.findNavController().navigate(R.id.action_favoriteFragment_to_mainFragment)
         }
 
     }
