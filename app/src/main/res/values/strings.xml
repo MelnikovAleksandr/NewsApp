@@ -17,4 +17,7 @@
     <string name="data_pattern">mm.dd.yyyy HH:mm</string>
     <string name="no_browser">Don\'t have any browser</string>
     <string name="empty_url" translatable="false">https://google.com</string>
+    <string name="no_favourites">No favourites yet</string>
+    <string name="no_favourites2">Make sure you have \n added event’s in this section</string>
+    <string name="add_favorites">Add favourites</string>
 </resources>
