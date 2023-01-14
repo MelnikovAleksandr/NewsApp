@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentMainBinding
 import ru.asmelnikov.android.newsapp.ui.adapters.NewsAdapter
+import ru.asmelnikov.android.newsapp.utils.NetworkUtils
 import ru.asmelnikov.android.newsapp.utils.Resource
 
 @AndroidEntryPoint
@@ -63,28 +64,39 @@ class MainFragment : Fragment() {
             )
         }
 
-        viewModel.newsLiveData.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resource.Success -> {
-                    progress_bar.visibility = View.INVISIBLE
-                    response.data.let {
-                        newsAdapter.differ.submitList(it?.articles)
+        NetworkUtils.getNetworkLiveData(requireContext())
+            .observe(viewLifecycleOwner) { isConnected ->
+                if (!isConnected) {
+                    no_internet.visibility = View.VISIBLE
+                    news_adapter.visibility = View.GONE
+                    Toast.makeText(activity, R.string.no_internet, Toast.LENGTH_LONG).show()
+                } else {
+                    no_internet.visibility = View.GONE
+                    news_adapter.visibility = View.VISIBLE
+                    viewModel.newsLiveData.observe(viewLifecycleOwner) { response ->
+                        when (response) {
+                            is Resource.Success -> {
+                                progress_bar.visibility = View.INVISIBLE
+                                response.data.let {
+                                    newsAdapter.differ.submitList(it?.articles)
+                                }
+                            }
+                            is Resource.Error -> {
+                                progress_bar.visibility = View.INVISIBLE
+                                response.data.let {
+                                    Toast.makeText(
+                                        activity, R.string.no_internet,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                            is Resource.Loading -> {
+                                progress_bar.visibility = View.VISIBLE
+                            }
+                        }
                     }
-                }
-                is Resource.Error -> {
-                    progress_bar.visibility = View.INVISIBLE
-                    response.data.let {
-                        Toast.makeText(
-                            activity, R.string.no_internet,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-                is Resource.Loading -> {
-                    progress_bar.visibility = View.VISIBLE
                 }
             }
-        }
     }
 
     private fun initAdapter() {

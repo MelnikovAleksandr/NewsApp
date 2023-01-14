@@ -29,7 +29,8 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="50dp"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
+                    android:background="@drawable/bg_image_10"
                     tools:ignore="ContentDescription" />
 
                 <ImageView

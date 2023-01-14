@@ -14,8 +14,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.asmelnikov.android.newsapp.data.api.NewsService
 import ru.asmelnikov.android.newsapp.data.db.ArticleDao
 import ru.asmelnikov.android.newsapp.data.db.ArticleDatabase
-import ru.asmelnikov.android.newsapp.utils.Constants.Companion.BASE_URL
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
+private const val BASE_URL = "https://newsapi.org/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -31,6 +33,7 @@ object AppModule {
     @Provides
     fun okHttpClient() = OkHttpClient.Builder()
         .addInterceptor(logging())
+        .pingInterval(3, TimeUnit.SECONDS)
         .build()
 
     @Provides

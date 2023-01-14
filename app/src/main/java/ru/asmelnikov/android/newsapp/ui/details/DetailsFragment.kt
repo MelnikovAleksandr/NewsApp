@@ -13,11 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentDetailsBinding
+import ru.asmelnikov.android.newsapp.utils.loadImage
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
@@ -41,8 +41,7 @@ class DetailsFragment : Fragment() {
         val articleArg = bundleArgs.article
         articleArg.let { article ->
             article.urlToImage?.let {
-                Glide.with(this).load(article.urlToImage).error(R.drawable.ic_image)
-                    .into(nBinding.headerImage)
+                nBinding.headerImage.loadImage(article.urlToImage)
             }
             nBinding.headerImage.clipToOutline = true
             nBinding.articleDetailsTitle.text = article.title

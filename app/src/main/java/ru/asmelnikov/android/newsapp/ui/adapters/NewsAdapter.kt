@@ -9,10 +9,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_article.view.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.models.Article
+import ru.asmelnikov.android.newsapp.utils.loadImage
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -44,7 +44,7 @@ class NewsAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.itemView.apply {
-            Glide.with(this).load(article.urlToImage).error(R.drawable.ic_image).into(article_image)
+            article_image.loadImage(article.urlToImage.toString())
             article_image.clipToOutline = true
             article_title.text = article.title
             val formattedDate = LocalDateTime

@@ -4,7 +4,8 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.asmelnikov.android.newsapp.models.NewsReppons
-import ru.asmelnikov.android.newsapp.utils.Constants.Companion.API_KEY
+
+private const val API_KEY = "30902f38d91440588b9c1a0b43035e83"
 
 interface NewsService {
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_favorite.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentFavoriteBinding
 import ru.asmelnikov.android.newsapp.ui.adapters.NewsAdapter
+import ru.asmelnikov.android.newsapp.utils.NetworkUtils
 
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
@@ -39,26 +41,41 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
 
-        viewModel.getCount().observe(
-            viewLifecycleOwner
-        ) { count ->
-            if (count > 99) {
-                favorites_count.text = getString(R.string.over_99)
-                nBinding?.invisibleLayout?.visibility = View.GONE
-                viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
-                    newsAdapter.differ.submitList(articles.asReversed())
-                }
-            } else if (count == 0) {
-                favorites_count.text = count.toString()
-                nBinding?.invisibleLayout?.visibility = View.VISIBLE
-            } else {
-                favorites_count.text = count.toString()
-                nBinding?.invisibleLayout?.visibility = View.GONE
-                viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
-                    newsAdapter.differ.submitList(articles.asReversed())
+        NetworkUtils.getNetworkLiveData(requireContext())
+            .observe(viewLifecycleOwner) { isConnected ->
+                if (!isConnected) {
+                    favorite_news_adapter.visibility = View.GONE
+                    favorites_count.visibility = View.GONE
+                    invisible_layout.visibility = View.GONE
+                    no_internet.visibility = View.VISIBLE
+                    Toast.makeText(activity, R.string.no_internet, Toast.LENGTH_LONG).show()
+                } else {
+                    favorite_news_adapter.visibility = View.VISIBLE
+                    favorites_count.visibility = View.VISIBLE
+                    invisible_layout.visibility = View.VISIBLE
+                    no_internet.visibility = View.GONE
+                    viewModel.getCount().observe(
+                        viewLifecycleOwner
+                    ) { count ->
+                        if (count > 99) {
+                            favorites_count.text = getString(R.string.over_99)
+                            nBinding?.invisibleLayout?.visibility = View.GONE
+                            viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
+                                newsAdapter.differ.submitList(articles.asReversed())
+                            }
+                        } else if (count == 0) {
+                            favorites_count.text = count.toString()
+                            nBinding?.invisibleLayout?.visibility = View.VISIBLE
+                        } else {
+                            favorites_count.text = count.toString()
+                            nBinding?.invisibleLayout?.visibility = View.GONE
+                            viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
+                                newsAdapter.differ.submitList(articles.asReversed())
+                            }
+                        }
+                    }
                 }
             }
-        }
 
         newsAdapter.setOnItemClickListenerShared {
             Intent(Intent.ACTION_SEND).apply {
