@@ -3,7 +3,6 @@ package ru.asmelnikov.android.newsapp.ui.search
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.no_internet
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentSearchBinding
 import ru.asmelnikov.android.newsapp.ui.adapters.NewsAdapter
+import ru.asmelnikov.android.newsapp.utils.NetworkUtils
 import ru.asmelnikov.android.newsapp.utils.Resource
 
 @AndroidEntryPoint
@@ -67,40 +68,56 @@ class SearchFragment : Fragment() {
             }
         }
 
-        var job: Job? = null
-        edit_search.addTextChangedListener { text: Editable? ->
-            job?.cancel()
-            job = MainScope().launch {
-                delay(500L)
-                text?.let {
-                    if (it.toString().isNotEmpty()) {
-                        viewModel.getSearchNews(query = it.toString())
+        NetworkUtils.getNetworkLiveData(requireContext())
+            .observe(viewLifecycleOwner) { isConnected ->
+                if (!isConnected) {
+                    no_internet.visibility = View.VISIBLE
+                    search_news_adapter.visibility = View.GONE
+                    edit_search.visibility = View.GONE
+                    Toast.makeText(activity, R.string.no_internet, Toast.LENGTH_LONG).show()
+                } else {
+                    no_internet.visibility = View.GONE
+                    search_news_adapter.visibility = View.VISIBLE
+                    edit_search.visibility = View.VISIBLE
+
+
+                    var job: Job? = null
+                    edit_search.addTextChangedListener { text: Editable? ->
+                        job?.cancel()
+                        job = MainScope().launch {
+                            delay(500L)
+                            text?.let {
+                                if (it.toString().isNotEmpty()) {
+                                    viewModel.getSearchNews(query = it.toString())
+                                }
+                            }
+                        }
+                    }
+
+                    viewModel.searchNewsLiveData.observe(viewLifecycleOwner) { response ->
+                        when (response) {
+                            is Resource.Success -> {
+                                search_progress_bar.visibility = View.INVISIBLE
+                                response.data.let {
+                                    newsAdapter.differ.submitList(it?.articles)
+                                }
+                            }
+                            is Resource.Error -> {
+                                search_progress_bar.visibility = View.INVISIBLE
+                                response.data.let {
+                                    Toast.makeText(
+                                        activity, R.string.enter_query,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                            is Resource.Loading -> {
+                                search_progress_bar.visibility = View.VISIBLE
+                            }
+                        }
                     }
                 }
             }
-        }
-        viewModel.searchNewsLiveData.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resource.Success -> {
-                    search_progress_bar.visibility = View.INVISIBLE
-                    response.data.let {
-                        newsAdapter.differ.submitList(it?.articles)
-                    }
-                }
-                is Resource.Error -> {
-                    search_progress_bar.visibility = View.INVISIBLE
-                    response.data.let {
-                        Toast.makeText(
-                            activity, R.string.no_internet,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-                is Resource.Loading -> {
-                    search_progress_bar.visibility = View.VISIBLE
-                }
-            }
-        }
     }
 
     private fun initAdapter() {

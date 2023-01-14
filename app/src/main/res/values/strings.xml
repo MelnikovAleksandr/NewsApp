@@ -20,4 +20,6 @@
     <string name="no_favourites">No favourites yet</string>
     <string name="no_favourites2">Make sure you have \n added event’s in this section</string>
     <string name="add_favorites">Add favourites</string>
+    <string name="enter_query">Enter a query</string>
+    <string name="check_your_connection_and_try_again">Check your connection and try again!</string>
 </resources>

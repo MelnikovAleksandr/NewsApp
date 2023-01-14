@@ -19,4 +19,7 @@
     <string name="no_favourites">Пока нет избранных записей</string>
     <string name="no_favourites2">Убедитесь, что вы добавили \n записи в этот раздел</string>
     <string name="add_favorites">Добавьте избранное</string>
+    <string name="enter_query">Введите запрос</string>
+    <string name="check_your_connection_and_try_again">Проверьте Ваше соединение и попробуйте снова!</string>
+
 </resources>
