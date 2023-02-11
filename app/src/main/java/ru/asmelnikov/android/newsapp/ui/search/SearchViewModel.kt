@@ -1,5 +1,6 @@
 package ru.asmelnikov.android.newsapp.ui.search
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +16,11 @@ class SearchViewModel @Inject constructor(
     private val repository: NewsRepository
 ) : ViewModel() {
 
-    val searchNewsLiveData: MutableLiveData<Resource<NewsReppons>> = MutableLiveData()
+    private val _searchNewsLiveData = MutableLiveData<Resource<NewsReppons>>()
+
+    val searchNewsLiveData: LiveData<Resource<NewsReppons>>
+        get() = _searchNewsLiveData
+
     private val searchNewsPage = 1
 
     init {
@@ -24,14 +29,14 @@ class SearchViewModel @Inject constructor(
 
     fun getSearchNews(query: String) =
         viewModelScope.launch {
-            searchNewsLiveData.postValue(Resource.Loading())
+            _searchNewsLiveData.postValue(Resource.Loading())
             val response = repository.getSearchNews(query = query, pageNumber = searchNewsPage)
             if (response.isSuccessful) {
                 response.body().let { res ->
-                    searchNewsLiveData.postValue(Resource.Success(res))
+                    _searchNewsLiveData.postValue(Resource.Success(res))
                 }
             } else {
-                searchNewsLiveData.postValue(Resource.Error(message = response.message()))
+                _searchNewsLiveData.postValue(Resource.Error(message = response.message()))
             }
         }
 }

@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.no_internet_banner.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentMainBinding
 import ru.asmelnikov.android.newsapp.ui.adapters.NewsAdapter
@@ -100,10 +101,15 @@ class MainFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        newsAdapter = NewsAdapter(requireContext())
+        newsAdapter = NewsAdapter()
         news_adapter.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

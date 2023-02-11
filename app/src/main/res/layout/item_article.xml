@@ -18,6 +18,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/img_progress_bar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:indeterminateOnly="true"
+        app:layout_constraintBottom_toBottomOf="@id/article_image"
+        app:layout_constraintEnd_toEndOf="@id/article_image"
+        app:layout_constraintStart_toStartOf="@id/article_image"
+        app:layout_constraintTop_toTopOf="@id/article_image" />
+
     <LinearLayout
         android:id="@+id/article_info"
         android:layout_width="185dp"
