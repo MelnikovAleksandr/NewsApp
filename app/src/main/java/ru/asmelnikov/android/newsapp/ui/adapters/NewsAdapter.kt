@@ -1,14 +1,21 @@
 package ru.asmelnikov.android.newsapp.ui.adapters
 
-import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.item_article.view.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.models.Article
@@ -17,7 +24,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class NewsAdapter(private val context: Context) :
+class NewsAdapter :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -44,7 +51,35 @@ class NewsAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.itemView.apply {
-            article_image.loadImage(article.urlToImage.toString())
+            img_progress_bar.isVisible = true
+            Glide.with(context)
+                .load(article.urlToImage.toString())
+                .error(R.drawable.ic_image)
+                .listener(object : RequestListener<Drawable?> {
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable?>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        img_progress_bar.isGone = true
+                        return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable?>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        img_progress_bar.isGone = true
+                       return false
+                    }
+                })
+                .into(article_image)
+
             article_image.clipToOutline = true
             article_title.text = article.title
             val formattedDate = LocalDateTime

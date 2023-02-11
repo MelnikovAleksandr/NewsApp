@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.empty_favorites_banner.*
 import kotlinx.android.synthetic.main.fragment_favorite.*
+import kotlinx.android.synthetic.main.no_internet_banner.*
 import ru.asmelnikov.android.newsapp.R
 import ru.asmelnikov.android.newsapp.databinding.FragmentFavoriteBinding
 import ru.asmelnikov.android.newsapp.ui.adapters.NewsAdapter
@@ -46,29 +48,29 @@ class FavoriteFragment : Fragment() {
                 if (!isConnected) {
                     favorite_news_adapter.visibility = View.GONE
                     favorites_count.visibility = View.GONE
-                    invisible_layout.visibility = View.GONE
+                    empty_favorites_banner.visibility = View.GONE
                     no_internet.visibility = View.VISIBLE
                     Toast.makeText(activity, R.string.no_internet, Toast.LENGTH_LONG).show()
                 } else {
                     favorite_news_adapter.visibility = View.VISIBLE
                     favorites_count.visibility = View.VISIBLE
-                    invisible_layout.visibility = View.VISIBLE
+                    empty_favorites_banner.visibility = View.VISIBLE
                     no_internet.visibility = View.GONE
                     viewModel.getCount().observe(
                         viewLifecycleOwner
                     ) { count ->
                         if (count > 99) {
                             favorites_count.text = getString(R.string.over_99)
-                            nBinding?.invisibleLayout?.visibility = View.GONE
+                            empty_favorites_banner.visibility = View.GONE
                             viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
                                 newsAdapter.differ.submitList(articles.asReversed())
                             }
                         } else if (count == 0) {
                             favorites_count.text = count.toString()
-                            nBinding?.invisibleLayout?.visibility = View.VISIBLE
+                            empty_favorites_banner.visibility = View.VISIBLE
                         } else {
                             favorites_count.text = count.toString()
-                            nBinding?.invisibleLayout?.visibility = View.GONE
+                            empty_favorites_banner.visibility = View.GONE
                             viewModel.getAllFavorites().observe(viewLifecycleOwner) { articles ->
                                 newsAdapter.differ.submitList(articles.asReversed())
                             }
@@ -131,17 +133,22 @@ class FavoriteFragment : Fragment() {
         }
 
 
-        nBinding?.invisibleButton?.setOnClickListener {
+        empty_favorites_button?.setOnClickListener {
             view.findNavController().navigate(R.id.action_favoriteFragment_to_mainFragment)
         }
 
     }
 
     private fun initAdapter() {
-        newsAdapter = NewsAdapter(requireContext())
+        newsAdapter = NewsAdapter()
         favorite_news_adapter.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
