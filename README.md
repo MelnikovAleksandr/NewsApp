@@ -1,4 +1,4 @@
-NewsApp, simple pet-project.
+﻿# News App - Simple Rest API https://newsapi.org/ android project.
 
 Single Activity, Kotlin, Fragment, MVVM, Navigation Components, ViewModel, Room, LiveData, Kotlin Coroutines, Retrofit, Hilt, Glide, SplashScreen API. 
 
